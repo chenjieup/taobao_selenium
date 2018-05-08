@@ -1,10 +1,12 @@
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as Ec
-from selenium.common.exceptions import TimeoutException
 import re
+
 from bs4 import BeautifulSoup
+from selenium import webdriver
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as Ec
+from selenium.webdriver.support.ui import WebDriverWait
+
 #千万不要用XPATH去选择，它会固定选择具体的一项，用CSS去选比较好。
 
 brower = webdriver.Chrome()
@@ -30,7 +32,7 @@ def get_pagenum(keyword):
         input.send_keys(keyword)
         botton = wait.until(Ec.presence_of_element_located((By.CSS_SELECTOR,'#J_TSearchForm > div.search-button > button')))
         botton.click()
-        page = brower.find_element(By.CSS_SELECTOR,'#mainsrp-pager > div > div > div > div.total').text
+        page = wait.until(Ec.presence_of_element_located((By.CSS_SELECTOR,'div.wraper  div.total'))).text
         page = re.compile('(\d+)').search(page).group(1)
         get_product()
         return int(page)
@@ -59,3 +61,4 @@ def main():
         get_nextpage(i)
 if __name__=='__main__':
     main()
+#spulist-pager > div > div > div > div.total
